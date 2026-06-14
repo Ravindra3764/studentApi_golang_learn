@@ -3,4 +3,6 @@ env: "dev"
 storage_path: "storage/storage.db"
 
 http_server:
-  address: "localhost:8085"
+  address: "localhost:8082" 
+
+

@@ -51,4 +51,7 @@ tmp/
 # Delve debugger
 debug
 debug.test
+
+
 student-api/storage/storage.db
+student-api/config/
