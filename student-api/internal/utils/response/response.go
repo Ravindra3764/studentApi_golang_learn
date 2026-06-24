@@ -46,6 +46,9 @@ func ValidatationError(errss validator.ValidationErrors) Response {
 		case "required":
 			errMsg = append(errMsg, fmt.Sprintf("field %s is required", err.Field()))
 
+		case "unique":
+			errMsg = append(errMsg, "email must is required")
+
 		default:
 			errMsg = append(errMsg, fmt.Sprintf("field %s is invalid", err.Field()))
 

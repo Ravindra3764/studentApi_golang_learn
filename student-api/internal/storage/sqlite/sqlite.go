@@ -2,9 +2,11 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/ravindra3764/student-api/student-api/internal/config"
+	"github.com/ravindra3764/student-api/student-api/internal/types"
 )
 
 type Sqlite struct {
@@ -61,5 +63,31 @@ func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error
 	}
 
 	return lastid, nil
+
+}
+
+func (s *Sqlite) GetStudentByID(id int64) (types.Student, error) {
+
+	statemen, error := s.Db.Prepare("SELECT * FROM STUDENTS WHERE id = ? LIMIT 1")
+
+	if error != nil {
+		return types.Student{}, error
+	}
+
+	defer statemen.Close()
+
+	var student types.Student
+
+	err := statemen.QueryRow(id).Scan(&student.Id, &student.Name, &student.Email, &student.Age)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return types.Student{}, fmt.Errorf("No Student found with id : %s", fmt.Sprint(id))
+
+		}
+		return types.Student{}, fmt.Errorf("Query Error : %w", err)
+	}
+
+	return student, nil
 
 }

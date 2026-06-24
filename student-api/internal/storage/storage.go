@@ -1,5 +1,11 @@
 package storage
 
+import (
+	"github.com/ravindra3764/student-api/student-api/internal/types"
+)
+
 type Storage interface {
 	CreateStudent(name string, email string, age int) (int64, error)
+
+	GetStudentByID(id int64) (types.Student, error)
 }
