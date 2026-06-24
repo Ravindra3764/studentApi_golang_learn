@@ -9,11 +9,12 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/ravindra3764/student-api/student-api/internal/storage"
 	"github.com/ravindra3764/student-api/student-api/internal/types"
 	"github.com/ravindra3764/student-api/student-api/internal/utils/response"
 )
 
-func New() http.HandlerFunc {
+func New(storage storage.Storage) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Creating a student")
@@ -24,7 +25,7 @@ func New() http.HandlerFunc {
 
 		if errors.Is(err, io.EOF) {
 			// response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
-			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(fmt.Errorf("Empty Body")))
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(fmt.Errorf("Body cant be empty")))
 			return
 		}
 
@@ -41,8 +42,23 @@ func New() http.HandlerFunc {
 			return
 		}
 
+		lastId, err := storage.CreateStudent(
+
+			student.Name,
+			student.Email,
+			student.Age,
+		)
+
+		slog.Info("user created succesfully", slog.String("userId ", fmt.Sprint(lastId)))
+		if err != nil {
+
+			response.WriteJson(w, http.StatusInternalServerError, err)
+			return
+
+		}
+
 		// w.Write([]byte("Welcome to student apis"))
-		response.WriteJson(w, http.StatusCreated, map[string]string{"Successs": "ok"})
+		response.WriteJson(w, http.StatusCreated, map[string]int64{"id": lastId})
 
 	}
 }

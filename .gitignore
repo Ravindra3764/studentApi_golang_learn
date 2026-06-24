@@ -54,4 +54,5 @@ debug.test
 
 
 student-api/storage/storage.db
-student-api/config/
+student-api/storage
+student-api/config
