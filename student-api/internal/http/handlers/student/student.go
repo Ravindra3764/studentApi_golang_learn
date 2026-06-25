@@ -111,3 +111,27 @@ func GetAllStudents(storage storage.Storage) http.HandlerFunc {
 
 	}
 }
+
+func DeleteStudenById(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		userid := r.PathValue("id")
+
+		slog.Info("Deleting student with ", slog.String("id %s", userid))
+
+		intId, err := strconv.ParseInt(userid, 10, 64)
+
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		if err := storage.DeleteStudentByID(intId); err != nil {
+			response.WriteJson(w, http.StatusInternalServerError, response.GeneralError(err))
+			return
+		}
+
+		response.WriteJson(w, http.StatusOK, map[string]string{"message": "student deleted successfully"})
+
+	}
+}

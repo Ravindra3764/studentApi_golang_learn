@@ -129,3 +129,34 @@ func (s *Sqlite) GetAllStudents() ([]types.Student, error) {
 
 	return students, nil
 }
+
+func (s *Sqlite) DeleteStudentByID(id int64) error {
+
+	statement, err := s.Db.Prepare("DELETE FROM STUDENTS WHERE id = ?")
+
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	result, err := statement.Exec(id)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if rowAffected == 0 {
+		return fmt.Errorf("no student found with id %d", id)
+
+	}
+
+	return nil
+
+}

@@ -39,6 +39,8 @@ func main() {
 
 	router.HandleFunc("GET /api/students", student.GetAllStudents(storage))
 
+	router.Handle("DELETE /api/students/{id}", student.DeleteStudenById(storage))
+
 	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Server is Running🚀🚀🚀🚀🚀🚀"))
 	})
