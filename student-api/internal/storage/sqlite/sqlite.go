@@ -23,10 +23,13 @@ func New(cfg *config.Config) (*Sqlite, error) {
 		return nil, err
 	}
 
+	// Delete table if not required
+	// db.Exec(`DROP TABLE IF EXISTS students`)
+
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS students(
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT,
-	email TEXT,
+	email TEXT UNIQUE,
 	age INTEGER
 	)`)
 
